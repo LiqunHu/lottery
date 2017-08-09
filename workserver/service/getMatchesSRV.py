@@ -11,13 +11,14 @@ from workserver.service.ServiceBase import ServiceBase
 from workserver.module.models import MatchInfoD
 from workserver.util import SysUtil
 
+
 class getMatchesResource(ServiceBase):
     def on_get(self, req, resp):
         self.initialize()
-        
+
         matches = self.session.query(MatchInfoD).\
-            filter(MatchInfoD.status=='Selling').all()
-            
+            filter(MatchInfoD.status == 'Selling').all()
+
         maData = []
         if matches:
             for m in matches:
@@ -55,13 +56,8 @@ class getMatchesResource(ServiceBase):
                                'll': m.ll})
 
         self.result['data'] = maData
-        
+
         req.context['result'] = self.result
         resp.set_header('Powered-By', 'huliquns@126.com')
         resp.status = falcon.HTTP_200
-        self.release()                           
-                               
-
-
-        
-    
+        self.release()

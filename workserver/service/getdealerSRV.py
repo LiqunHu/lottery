@@ -12,13 +12,15 @@ from workserver.util import SysUtil
 
 class GetDealerSRVResource(ServiceBase):
     def on_get(self, req, resp):
-        self.initialize()        
+        self.initialize()
         maData = []
         for m, d in self.session.query(DealerMatch, Dealer).\
                 filter(DealerMatch.date == SysUtil.getTomorrow()).\
                 filter(DealerMatch.dealerid == Dealer.uid).all():
-            mA = self.session.query(MatchInfoD).filter( MatchInfoD.matchid == m.matchAID ).first()
-            mB = self.session.query(MatchInfoD).filter( MatchInfoD.matchid == m.matchBID ).first()
+            mA = self.session.query(MatchInfoD).filter(
+                MatchInfoD.matchid == m.matchAID).first()
+            mB = self.session.query(MatchInfoD).filter(
+                MatchInfoD.matchid == m.matchBID).first()
             maData.append({'dealerid': m.dealerid,
                            'dealername': d.name,
                            'dealtype': d.dealertype,
@@ -26,20 +28,20 @@ class GetDealerSRVResource(ServiceBase):
                            'matchdesc': m.matchdesc,
                            'matchAID': m.matchAID,
                            'matchAResult': m.matchAResult,
-                           'matchAtype':mA.matchtypename,
-                           'matchAzhu':mA.matchzhu,
-                           'matchAke':mA.matchke,
-                           'matchAw':mA.wrate,
-                           'matchAd':mA.drate,
-                           'matchAl':mA.lrate,
-                           'matchBID':m.matchBID,
-                           'matchBResult':m.matchBResult,
-                           'matchBtype':mB.matchtypename,
-                           'matchBzhu':mB.matchzhu,
-                           'matchBke':mB.matchke,
-                           'matchBw':mB.wrate,
-                           'matchBd':mB.drate,
-                           'matchBl':mB.lrate
+                           'matchAtype': mA.matchtypename,
+                           'matchAzhu': mA.matchzhu,
+                           'matchAke': mA.matchke,
+                           'matchAw': mA.wrate,
+                           'matchAd': mA.drate,
+                           'matchAl': mA.lrate,
+                           'matchBID': m.matchBID,
+                           'matchBResult': m.matchBResult,
+                           'matchBtype': mB.matchtypename,
+                           'matchBzhu': mB.matchzhu,
+                           'matchBke': mB.matchke,
+                           'matchBw': mB.wrate,
+                           'matchBd': mB.drate,
+                           'matchBl': mB.lrate
                            })
         self.result['data'] = maData
         req.context['result'] = self.result

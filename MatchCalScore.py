@@ -18,16 +18,16 @@ session = db()
 def dateRange(start,end):
     begin = datetime.datetime.strptime(start,"%Y-%m-%d")
     end = datetime.datetime.strptime(end,"%Y-%m-%d")
-    d = begin  
-    delta = datetime.timedelta(days=1) 
+    d = begin
+    delta = datetime.timedelta(days=1)
     dateList = []
-    while d <= end:  
+    while d <= end:
         dateList.append(d.strftime("%Y-%m-%d"))
-        d += delta  
+        d += delta
     return dateList
 
 def clearData():
-    try: 
+    try:
         session.query(MatchDataBatch).delete()
         session.query(AccountRunningBatch).delete()
         session.commit()
@@ -40,7 +40,7 @@ def getMatchDraw(date):
         filter(MatchInfo.s0 > 1.0).\
         filter(MatchInfo.minrate > 1.2).\
         filter(MatchInfo.minrate < 2.1).all()
-        
+
     count = 0
     if matches:
         for m in matches:
@@ -80,11 +80,11 @@ def getMatchMoney(m):
         else:
             return None
     return 0.00
-        
+
 def calMatResult(date, account, basemoney):
     matches = session.query(MatchDataBatch).\
         filter(MatchDataBatch.date == date).all()
-    
+
     winMoney = 0.00
     sumMoney = 0.00
     for m in matches:
@@ -92,24 +92,24 @@ def calMatResult(date, account, basemoney):
         matchMoney = getMatchMoney(m)
         if matchMoney is None:
             return 0
-        
+
         if matchMoney:
             winMoney += matchMoney
             m.ResultMoney = matchMoney
-    
+
     if account:
         fixTotal = account.fixTotal
         fTotalResult = account.totalResult + winMoney - sumMoney
         fRiskMoney = account.riskMoney + winMoney - sumMoney
         if fTotalResult > 10 * basemoney:
-            fixTotal = account.fixTotal + fTotalResult 
+            fixTotal = account.fixTotal + fTotalResult
             fTotalResult = 0.00
             fRiskMoney = 0.00
     else:
         fixTotal = 0.00
         fTotalResult = winMoney - sumMoney
         fRiskMoney = winMoney - sumMoney
-    
+
     ac = AccountRunningBatch(
         date = date,
         useMoney = sumMoney,
@@ -129,14 +129,14 @@ if __name__ == '__main__':
         riskMoney = 0.00
         fixTotal = 0.00
         matchCount = getMatchDraw(date)
-        
+
         if matchCount == 0:
             continue
         if matchCount < 3:
             print(date)
             print(matchCount)
-            
-        
+
+
         account = session.query(AccountRunningBatch).order_by(AccountRunningBatch.date.desc()).first()
         if account:
             if account.riskMoney < 0:
@@ -145,7 +145,7 @@ if __name__ == '__main__':
                     money = basemoney*0.8
 #            else:
 #                money = basemoney *matchCount/3
-            
-            
+
+
         calMoney(date,money)
         calMatResult(date,account,basemoney)

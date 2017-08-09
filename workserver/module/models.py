@@ -5,11 +5,12 @@ Created on Wed May 18 10:18:23 2016
 @author: huliqun
 """
 from sqlalchemy import Column, Integer, SmallInteger, String, Date, Time,\
-    Text, DateTime, func,BigInteger,Float, Boolean
+    Text, DateTime, func, BigInteger, Float, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from workserver.util import GLBConfig
 
 Base = declarative_base()
+
 
 class User(Base):
     __tablename__ = 'tbl_user'
@@ -26,7 +27,7 @@ class User(Base):
     paytimes = Column(Integer, default=0, nullable=False)
     maketime = Column(DateTime(), default=func.now(), nullable=False)
     modifyTime = Column(DateTime(), default=func.now(), nullable=False)
-        
+
     @property
     def password(self):
         return self._password
@@ -37,12 +38,14 @@ class User(Base):
         # encrypt the password with md5
         self._password = hashlib.md5(password.encode('utf-8')).hexdigest()
 
+
 class UserData(Base):
     __tablename__ = 'tbl_userdata'
     userid = Column(String(100), primary_key=True, nullable=False)
     basemoney = Column(Float, default=0.0)
     mode = Column(String(10), default='A')
-     
+
+
 class PayLog(Base):
     __tablename__ = 'tbl_paylog'
     uid = Column(Integer, primary_key=True, autoincrement=True)
@@ -51,6 +54,7 @@ class PayLog(Base):
     payType = Column(String(10))
     fromDate = Column(DateTime())
     toDate = Column(DateTime())
+
 
 class AccountRunning(Base):
     __tablename__ = 'tbl_account_running'
@@ -63,7 +67,8 @@ class AccountRunning(Base):
     totalResult = Column(Float, default=0.0)
     fixTotal = Column(Float, default=0.0)
     status = Column(String(5), default='1')
-    
+
+
 class MatchData(Base):
     __tablename__ = 'tbl_matchdata'
     uid = Column(Integer, primary_key=True, autoincrement=True)
@@ -79,7 +84,8 @@ class MatchData(Base):
     ResultMoney = Column(Float, default=0.0)
     dealerid = Column(Integer)
     status = Column(String(5), default='1')
-    
+
+
 class AccountRunningBatch(Base):
     __tablename__ = 'tbl_account_running_batch'
     uid = Column(Integer, primary_key=True, autoincrement=True)
@@ -91,6 +97,7 @@ class AccountRunningBatch(Base):
     fixTotal = Column(Float, default=0.0)
     matchCount = Column(Integer)
     status = Column(String(5), default='1')
+
 
 class MatchDataBatch(Base):
     __tablename__ = 'tbl_matchdata_batch'
@@ -104,18 +111,20 @@ class MatchDataBatch(Base):
     rate = Column(Float, default=0.0)
     money = Column(Float, default=0.0)
     ResultMoney = Column(Float, default=0.0)
-    status = Column(String(5), default='1')    
+    status = Column(String(5), default='1')
+
 
 class Dealer(Base):
     __tablename__ = 'tbl_dealer'
     uid = Column(Integer, primary_key=True, autoincrement=True)
-    dealertype = Column(String(10)) 
+    dealertype = Column(String(10))
     name = Column(String(30))
     straightwin = Column(Integer, default=0)
     straightlost = Column(Integer, default=0)
     rule = Column(String(100))
     dealerdesc = Column(Text)
-    
+
+
 class DealerMatch(Base):
     __tablename__ = 'tbl_dealermatch'
     uid = Column(Integer, primary_key=True, autoincrement=True)
@@ -127,7 +136,8 @@ class DealerMatch(Base):
     matchBResult = Column(String(10))
     winFlag = Column(String(10))
     matchdesc = Column(Text)
-    
+
+
 class MatchInfo(Base):
     __tablename__ = 'tbl_matchinfo'
     matchid = Column(String(50), primary_key=True)
@@ -176,10 +186,11 @@ class MatchInfo(Base):
     ld = Column(Float, default=0.0)
     ll = Column(Float, default=0.0)
     infoUrl = Column(String(200))
-    zhuRank = Column(Integer, default=7) 
+    zhuRank = Column(Integer, default=7)
     keRank = Column(Integer, default=7)
     rankDValue = Column(Integer, default=0)
- 
+
+
 class MatchInfo500(Base):
     __tablename__ = 'tbl_matchinfo_500'
     matchid = Column(String(50), primary_key=True)
@@ -191,7 +202,7 @@ class MatchInfo500(Base):
     matchtype = Column(String(50))
     matchzhu = Column(String(50))
     matchke = Column(String(50))
-    zhuRank = Column(Integer, default=7) 
+    zhuRank = Column(Integer, default=7)
     keRank = Column(Integer, default=7)
     rankDValue = Column(Integer, default=0)
     zhuHScore = Column(Integer)
@@ -210,7 +221,8 @@ class MatchInfo500(Base):
     drateS = Column(Float, default=0.0)
     lrateS = Column(Float, default=0.0)
     minrateS = Column(Float, default=0.0)
-    singleFlag = Column(String(10)) 
+    singleFlag = Column(String(10))
+
 
 class MatchInfoD(Base):
     __tablename__ = 'tbl_matchinfod'
@@ -260,10 +272,11 @@ class MatchInfoD(Base):
     ld = Column(Float, default=0.0)
     ll = Column(Float, default=0.0)
     infoUrl = Column(String(200))
-    zhuRank = Column(Integer, default=7) 
+    zhuRank = Column(Integer, default=7)
     keRank = Column(Integer, default=7)
     rankDValue = Column(Integer, default=0)
- 
+
+
 class MatchInfo500D(Base):
     __tablename__ = 'tbl_matchinfo_500d'
     matchid = Column(String(50), primary_key=True)
@@ -275,7 +288,7 @@ class MatchInfo500D(Base):
     matchtype = Column(String(50))
     matchzhu = Column(String(50))
     matchke = Column(String(50))
-    zhuRank = Column(Integer, default=7) 
+    zhuRank = Column(Integer, default=7)
     keRank = Column(Integer, default=7)
     rankDValue = Column(Integer, default=0)
     zhuHScore = Column(Integer)
@@ -294,8 +307,9 @@ class MatchInfo500D(Base):
     drateS = Column(Float, default=0.0)
     lrateS = Column(Float, default=0.0)
     minrateS = Column(Float, default=0.0)
-    singleFlag = Column(String(10)) 
-    
+    singleFlag = Column(String(10))
+
+
 class MatchInfo500Time(Base):
     __tablename__ = 'tbl_matchinfo_500time'
     matchid = Column(String(50), primary_key=True)
@@ -309,7 +323,8 @@ class MatchInfo500Time(Base):
     zhuHScore = Column(Integer)
     keHScore = Column(Integer)
     mststus = Column(String(50))
-    
+
+
 class PinnaclePara(Base):
     __tablename__ = 'tbl_pinnacle_para'
     id = Column(Integer, primary_key=True)
@@ -320,8 +335,9 @@ class PinnaclePara(Base):
     eventSpecialsCount = Column(Integer)
     eventCount = Column(Integer)
     modifyTime = Column(DateTime(), default=func.now(), nullable=False)
-    maketime = Column(DateTime(), default=func.now(), nullable=False)    
-    
+    maketime = Column(DateTime(), default=func.now(), nullable=False)
+
+
 class PinnacleSports(Base):
     __tablename__ = 'tbl_pinnacle_sports'
     id = Column(BigInteger, primary_key=True)
@@ -333,6 +349,7 @@ class PinnacleSports(Base):
     eventCount = Column(Integer)
     modifyTime = Column(DateTime(), default=func.now(), nullable=False)
     maketime = Column(DateTime(), default=func.now(), nullable=False)
+
 
 class PinnacleLeagues(Base):
     __tablename__ = 'tbl_pinnacle_leagues'
@@ -349,16 +366,18 @@ class PinnacleLeagues(Base):
     modifyTime = Column(DateTime(), default=func.now(), nullable=False)
     maketime = Column(DateTime(), default=func.now(), nullable=False)
 
+
 class PinnacleTimestamp(Base):
     __tablename__ = 'tbl_pinnacle_timestamp'
     uid = Column(Integer, primary_key=True, autoincrement=True)
     tstype = Column(String(100))
-    sportId = Column(BigInteger)   
+    sportId = Column(BigInteger)
     value1 = Column(BigInteger)
     value2 = Column(String(100))
     modifyTime = Column(DateTime(), default=func.now(), nullable=False)
     maketime = Column(DateTime(), default=func.now(), nullable=False)
-    
+
+
 class PinnacleFixtures(Base):
     __tablename__ = 'tbl_pinnacle_fixtures'
     id = Column(BigInteger, primary_key=True)
@@ -377,7 +396,8 @@ class PinnacleFixtures(Base):
     awayPitcher = Column(String(100))
     modifyTime = Column(DateTime(), default=func.now(), nullable=False)
     maketime = Column(DateTime(), default=func.now(), nullable=False)
-    
+
+
 class PinnacleSettledFixtures(Base):
     __tablename__ = 'tbl_pinnacle_settled_fixtures'
     settlementId = Column(BigInteger, primary_key=True)
@@ -391,7 +411,8 @@ class PinnacleSettledFixtures(Base):
     team2Score = Column(Integer)
     modifyTime = Column(DateTime(), default=func.now(), nullable=False)
     maketime = Column(DateTime(), default=func.now(), nullable=False)
-    
+
+
 class PinnacleSettledSpecialFixtures(Base):
     __tablename__ = 'tbl_pinnacle_settled_Special_fixtures'
     settlementId = Column(BigInteger, primary_key=True)

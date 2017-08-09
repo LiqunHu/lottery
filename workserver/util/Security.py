@@ -14,28 +14,33 @@ from workserver.util.AES_PKCS7_extension import Cryptor
 from workserver.module.models import User, OperatorInfo, UserGroupMenu, CarManagerInfo, ContainerYard, CarrierInfo, PutterInfo, UserGroupInfo
 import workserver.settings as settings
 ALLOWED_IMAGE_TYPES = (
-    'image/jpg',                   
+    'image/jpg',
     'image/gif',
     'image/jpeg',
     'image/png',
 )
-    
+
+
 def validate_image_type(req, resp, resource, params):
     if req.content_type not in ALLOWED_IMAGE_TYPES:
         msg = 'Image type not allowed. Must be PNG, JPEG, or GIF'
         raise falcon.HTTPBadRequest('Bad request', msg)
 
-def user2token(user, identifyCode, magicNo,max_age):
+
+def user2token(user, identifyCode, magicNo, max_age):
     '''
     Generate token str by user.
     '''
     # build cookie string by: id-expires-sha1
     expires = str(int(time.time() + max_age))
-    s = '%s-%s-%s-%s' % (user.userID, identifyCode, expires, settings.SECRET_KEY)
-    L = [user.userID, magicNo, expires, hashlib.sha1(s.encode('utf-8')).hexdigest()]
+    s = '%s-%s-%s-%s' % (user.userID, identifyCode,
+                         expires, settings.SECRET_KEY)
+    L = [user.userID, magicNo, expires,
+         hashlib.sha1(s.encode('utf-8')).hexdigest()]
     return '-'.join(L)
 
-def token2user(req,logging):
+
+def token2user(req, logging):
     token_str = req.get_header('authorization')
     db = SysUtil.get_db_handle()
     session = db()
@@ -46,13 +51,14 @@ def token2user(req,logging):
         L = token_str.split('-')
         if len(L) != 4:
             return None
-        
+
         uid, magicNo, expires, sha1 = L
         if int(expires) < time.time():
             logging.info('expires')
             return None
-        
-        user = session.query(User).filter_by(userID=uid, dataStatus=GLBConfig.ENABLE).first()
+
+        user = session.query(User).filter_by(
+            userID=uid, dataStatus=GLBConfig.ENABLE).first()
         if user is None:
             logging.info('user do not exist')
             return None
@@ -70,7 +76,7 @@ def token2user(req,logging):
         return None
     finally:
         session.close()
-        
+
 
 def userAuthCheck(session, req, user, logging):
     if user is None:
@@ -79,15 +85,20 @@ def userAuthCheck(session, req, user, logging):
     else:
         exInfo = None
         if user.accountType == GLBConfig.ATYPE_OPERATOR:
-            exInfo = session.query(OperatorInfo).filter_by(userID=user.userID).first()
+            exInfo = session.query(OperatorInfo).filter_by(
+                userID=user.userID).first()
         elif user.accountType == GLBConfig.ATYPE_CARMANAGER:
-            exInfo = session.query(CarManagerInfo).filter_by(userID=user.userID).first()
+            exInfo = session.query(CarManagerInfo).filter_by(
+                userID=user.userID).first()
         elif user.accountType == GLBConfig.ATYPE_CONTAINERYARD:
-            exInfo = session.query(ContainerYard).filter_by(userID=user.userID).first()
+            exInfo = session.query(ContainerYard).filter_by(
+                userID=user.userID).first()
         elif user.accountType == GLBConfig.ATYPE_CARRIER:
-            exInfo = session.query(CarrierInfo).filter_by(userID=user.userID).first()
+            exInfo = session.query(CarrierInfo).filter_by(
+                userID=user.userID).first()
         elif user.accountType == GLBConfig.ATYPE_PUTTER:
-            exInfo = session.query(PutterInfo).filter_by(userID=user.userID).first()
+            exInfo = session.query(PutterInfo).filter_by(
+                userID=user.userID).first()
 
         if exInfo is not None:
             userGroupID = exInfo.userGroupID
@@ -97,16 +108,18 @@ def userAuthCheck(session, req, user, logging):
             else:
                 groupType = GLBConfig.GTYPE_PUTBOXCOMPANY
 
-            userGroup = session.query(UserGroupInfo).filter_by(userGroupType=groupType).first()
+            userGroup = session.query(UserGroupInfo).filter_by(
+                userGroupType=groupType).first()
             if userGroup is not None:
                 userGroupID = userGroup.userGroupID
             else:
                 return False
         else:
             return False
-        
-        menuLists = session.query(UserGroupMenu).filter_by(userGroupID = userGroupID)
-        menus = [ item.menuPath.split('/')[-1].upper() for item in menuLists]
+
+        menuLists = session.query(UserGroupMenu).filter_by(
+            userGroupID=userGroupID)
+        menus = [item.menuPath.split('/')[-1].upper() for item in menuLists]
         funcStr = req.path.split('/')[-1].upper()
         if funcStr not in menus and funcStr != 'AUTH':
             logging.info(userGroupID)
@@ -114,7 +127,6 @@ def userAuthCheck(session, req, user, logging):
             logging.info(funcStr)
             logging.info('menus not in funcStr')
             return False
-            
+
         return True
     return True
-            

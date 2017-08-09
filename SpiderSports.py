@@ -23,9 +23,8 @@ class SpiderSportsBatch(BatchBase):
     def run(self):
         self.initialize()
         end = datetime.date.today()
-#        end = datetime.datetime.strptime('2015-09-27','%Y-%m-%d').date()
-        delta = datetime.timedelta(days=1000) 
-        start = end - delta  
+        maxDate = self.session.query(func.max(MatchInfo.date).label('max_date')).first()
+        start = maxDate.max_date + datetime.timedelta(days=1)
         
         self.getMatresult(start, end)
         self.release()

@@ -11,8 +11,8 @@ import cgi
 
 from workserver.util import SysUtil
 
-class Parser(cgi.FieldStorage):
 
+class Parser(cgi.FieldStorage):
     pass
 
 
@@ -32,13 +32,15 @@ class MultipartMiddleware(object):
         # This must be done to avoid a bug in cgi.FieldStorage.
         req.env.setdefault('QUERY_STRING', '')
 
-        form = cgi.FieldStorage(req.stream, headers=req.headers ,environ=req.env)
+        form = cgi.FieldStorage(
+            req.stream, headers=req.headers, environ=req.env)
         for key in form:
             field = form[key]
             if not getattr(field, 'filename', False):
                 field = form.getlist(key)
             # TODO: put files in req.files instead when #493 get merged.
             req._params[key] = field
+
 
 class JSONTranslator(object):
     def __init__(self):
@@ -51,10 +53,10 @@ class JSONTranslator(object):
         # See also: PEP 3333
         if req.content_length in (None, 0):
             # Nothing to do
-#            self.logger.info(req.headers)
-#            self.logger.info('Message length is 0')
+            #            self.logger.info(req.headers)
+            #            self.logger.info('Message length is 0')
             return
-            
+
         if req.content_type.split(';')[0] == 'application/json':
             body = req.stream.read()
             if not body:
@@ -64,7 +66,7 @@ class JSONTranslator(object):
                 req.context['doc'] = json.loads(body.decode('utf-8'))
                 if 'user' in req.context:
                     SysUtil.createOperateLog(req)
-    
+
             except (ValueError, UnicodeDecodeError):
                 raise falcon.HTTPError(falcon.HTTP_753,
                                        'Malformed JSON',
@@ -77,15 +79,3 @@ class JSONTranslator(object):
             return
 
         resp.body = json.dumps(req.context['result'])
-        
-        
-#    def AuthTrans(self, req):
-#        try:
-#            paths = req.path.split('/')
-#            methodApi = paths[paths.index('api')+1]
-#            if methodApi == 'auth' and req.method == 'GET' :
-#                return True
-#            return False
-#        except Exception as ex:
-#            self.logger.error(ex)
-#            return False

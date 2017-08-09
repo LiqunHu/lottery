@@ -13,7 +13,7 @@ from workserver.util import LogUtil
 from workserver.util import SysUtil
 
 from workserver.service import userRegSRV, payMoneySRV, setBaseMoneySRV, getCurrentResultSRV, getGambleResultSRV,\
-        getMatchResultSRV, getAccountLogSRV, getdealerSRV, getGameResultSRV, getMatchesSRV, setDealerMatchSRV, getRecommendSRV
+    getMatchResultSRV, getAccountLogSRV, getdealerSRV, getGameResultSRV, getMatchesSRV, setDealerMatchSRV, getRecommendSRV
 
 
 LogUtil.initLog()
@@ -25,16 +25,24 @@ app = falcon.API(middleware=[
 
 app.add_route('/sports/webService/userReg', userRegSRV.userRegResource())
 app.add_route('/sports/webService/payMoney', payMoneySRV.payMoneyResource())
-app.add_route('/sports/webService/setBaseMoney', setBaseMoneySRV.setBaseMoneyResource())
-app.add_route('/sports/webService/getCurrentResult', getCurrentResultSRV.getCurrentResultResource())
-app.add_route('/sports/webService/getGambleResult', getGambleResultSRV.getGambleResultResource())
+app.add_route('/sports/webService/setBaseMoney',
+              setBaseMoneySRV.setBaseMoneyResource())
+app.add_route('/sports/webService/getCurrentResult',
+              getCurrentResultSRV.getCurrentResultResource())
+app.add_route('/sports/webService/getGambleResult',
+              getGambleResultSRV.getGambleResultResource())
 #app.add_route('/sports/webService/getMatchResult', getMatchResultSRV.getMatchResultResource())
-app.add_route('/sports/webService/getGameResult', getGameResultSRV.getGameResultResource())
-app.add_route('/sports/webService/getAccountLog', getAccountLogSRV.getAccountLogResource())
+app.add_route('/sports/webService/getGameResult',
+              getGameResultSRV.getGameResultResource())
+app.add_route('/sports/webService/getAccountLog',
+              getAccountLogSRV.getAccountLogResource())
 #app.add_route('/sports/webService/getdealer', getdealerSRV.GetDealerSRVResource())
-app.add_route('/sports/webService/getRecommend', getRecommendSRV.GetRecommendSRVResource())
-app.add_route('/sports/webService/setDealerMatch', setDealerMatchSRV.setDealerMatchSRVResource())
-app.add_route('/sports/webService/getMatches', getMatchesSRV.getMatchesResource())
+app.add_route('/sports/webService/getRecommend',
+              getRecommendSRV.GetRecommendSRVResource())
+app.add_route('/sports/webService/setDealerMatch',
+              setDealerMatchSRV.setDealerMatchSRVResource())
+app.add_route('/sports/webService/getMatches',
+              getMatchesSRV.getMatchesResource())
 #app.add_route('/sports/webService/dealwithdealer', dealwithdealerSRV.DealWithDealerResource())
 
 # Useful for debugging problems in your API; works with pdb.set_trace(). You
@@ -45,4 +53,4 @@ if __name__ == '__main__':
     httpd = simple_server.make_server('0.0.0.0', 9000, app)
     httpd.serve_forever()
 
-#gunicorn -b 127.0.0.1:9000 MainServer:app
+# gunicorn -b 127.0.0.1:9000 MainServer:app

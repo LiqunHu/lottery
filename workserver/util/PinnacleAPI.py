@@ -19,12 +19,14 @@ GLB_TIMEOUT = 10
 username = 'JL946281'
 password = 'DJ851217@'
 
+
 def authorization(usr, pwd):
     return 'Basic ' + base64.b64encode((usr + ':' + pwd).encode(encoding="utf-8")).decode()
-    
-def GetSportsV1(logger = None):
+
+
+def GetSportsV1(logger=None):
     try:
-        headers = {'Authorization': authorization(username, password)}       
+        headers = {'Authorization': authorization(username, password)}
         host = APIHOST
         url = '/v1/sports'
         conn = http.client.HTTPSConnection(host, timeout=GLB_TIMEOUT)
@@ -37,11 +39,12 @@ def GetSportsV1(logger = None):
         SysUtil.exceptionPrint(logger, ex)
         return None
 
-def GetSportsV2(logger = None):
+
+def GetSportsV2(logger=None):
     try:
         headers = {'Authorization': authorization(username, password)}
-    #    params = {'username':'xxxx'}        
-    #    data = urllib.urlencode(params)        
+    #    params = {'username':'xxxx'}
+    #    data = urllib.urlencode(params)
         host = APIHOST
         url = '/v2/sports'
         conn = http.client.HTTPSConnection(host, timeout=GLB_TIMEOUT)
@@ -57,11 +60,12 @@ def GetSportsV2(logger = None):
         SysUtil.exceptionPrint(logger, ex)
         return None
 
-def GetLeaguesV1(sportid ,logger = None):
+
+def GetLeaguesV1(sportid, logger=None):
     try:
-        headers = {'Authorization': authorization(username, password)} 
-        params = {'SportID': sportid}        
-        data = urllib.parse.urlencode(params)        
+        headers = {'Authorization': authorization(username, password)}
+        params = {'SportID': sportid}
+        data = urllib.parse.urlencode(params)
         host = APIHOST
         url = '/v1/leagues?'
         conn = http.client.HTTPSConnection(host, timeout=GLB_TIMEOUT)
@@ -73,12 +77,13 @@ def GetLeaguesV1(sportid ,logger = None):
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
         return None
-        
-def GetLeaguesV2(sportId ,logger = None):
+
+
+def GetLeaguesV2(sportId, logger=None):
     try:
-        headers = {'Authorization': authorization(username, password)} 
-        params = {'SportID': sportId}        
-        data = urllib.parse.urlencode(params)        
+        headers = {'Authorization': authorization(username, password)}
+        params = {'SportID': sportId}
+        data = urllib.parse.urlencode(params)
         host = APIHOST
         url = '/v2/leagues?'
         conn = http.client.HTTPSConnection(host, timeout=GLB_TIMEOUT)
@@ -93,7 +98,8 @@ def GetLeaguesV2(sportId ,logger = None):
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
         return None
-        
+
+
 def GetFixtures(sportId, leagueIds=[], since=None, islive=None, logger=None):
     try:
         headers = {'Authorization': authorization(username, password)}
@@ -106,7 +112,7 @@ def GetFixtures(sportId, leagueIds=[], since=None, islive=None, logger=None):
             params['since'] = since
         if islive:
             params['islive'] = islive
-        data = urllib.parse.urlencode(params)        
+        data = urllib.parse.urlencode(params)
         host = APIHOST
         url = '/v1/fixtures?'
         conn = http.client.HTTPSConnection(host, timeout=GLB_TIMEOUT)
@@ -121,7 +127,8 @@ def GetFixtures(sportId, leagueIds=[], since=None, islive=None, logger=None):
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
         return None
-    
+
+
 def GetSettledFixtures(sportId, leagueIds=[], since=None, logger=None):
     try:
         headers = {'Authorization': authorization(username, password)}
@@ -132,7 +139,7 @@ def GetSettledFixtures(sportId, leagueIds=[], since=None, logger=None):
             params['leagueIds'] = ','.join(leagueIds)
         if since:
             params['since'] = since
-        data = urllib.parse.urlencode(params)        
+        data = urllib.parse.urlencode(params)
         host = APIHOST
         url = '/v1/fixtures/settled?'
         conn = http.client.HTTPSConnection(host, timeout=GLB_TIMEOUT)
@@ -147,7 +154,8 @@ def GetSettledFixtures(sportId, leagueIds=[], since=None, logger=None):
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
         return None
-        
+
+
 def GetSpecialFixtures(sportId, leagueIds=[], category=None, eventId=None, specialId=None, since=None, logger=None):
     try:
         headers = {'Authorization': authorization(username, password)}
@@ -164,7 +172,7 @@ def GetSpecialFixtures(sportId, leagueIds=[], category=None, eventId=None, speci
             params['specialId'] = specialId
         if since:
             params['since'] = since
-        data = urllib.parse.urlencode(params)        
+        data = urllib.parse.urlencode(params)
         host = APIHOST
         url = '/v1/fixtures/special?'
         conn = http.client.HTTPSConnection(host, timeout=GLB_TIMEOUT)
@@ -179,7 +187,8 @@ def GetSpecialFixtures(sportId, leagueIds=[], category=None, eventId=None, speci
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
         return None
-        
+
+
 def GetSettledSpecialFixtures(sportId, leagueIds=[], since=None, logger=None):
     try:
         headers = {'Authorization': authorization(username, password)}
@@ -190,7 +199,7 @@ def GetSettledSpecialFixtures(sportId, leagueIds=[], since=None, logger=None):
             params['leagueIds'] = ','.join(leagueIds)
         if since:
             params['since'] = since
-        data = urllib.parse.urlencode(params)        
+        data = urllib.parse.urlencode(params)
         host = APIHOST
         url = '/v1/fixtures/special/settled?'
         conn = http.client.HTTPSConnection(host, timeout=GLB_TIMEOUT)
@@ -205,12 +214,13 @@ def GetSettledSpecialFixtures(sportId, leagueIds=[], since=None, logger=None):
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
         return None
-        
+
+
 def GetTeaserGroups(oddsFormat, logger=None):
     try:
         headers = {'Authorization': authorization(username, password)}
         params = {'oddsFormat': oddsFormat}
-        data = urllib.parse.urlencode(params)        
+        data = urllib.parse.urlencode(params)
         host = APIHOST
         url = '/v1/teaser/groups?'
         conn = http.client.HTTPSConnection(host, timeout=GLB_TIMEOUT)
@@ -225,7 +235,8 @@ def GetTeaserGroups(oddsFormat, logger=None):
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
         return None
-        
+
+
 def GetOdds(sportId, leagueIds=[], since=None, islive=None, oddsFormat=None, logger=None):
     try:
         headers = {'Authorization': authorization(username, password)}
@@ -240,7 +251,7 @@ def GetOdds(sportId, leagueIds=[], since=None, islive=None, oddsFormat=None, log
             params['islive'] = islive
         if oddsFormat:
             params['oddsFormat'] = oddsFormat
-        data = urllib.parse.urlencode(params)        
+        data = urllib.parse.urlencode(params)
         host = APIHOST
         url = '/v1/odds?'
         conn = http.client.HTTPSConnection(host, timeout=GLB_TIMEOUT)
@@ -255,7 +266,8 @@ def GetOdds(sportId, leagueIds=[], since=None, islive=None, oddsFormat=None, log
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
         return None
-        
+
+
 def GetOddsParlay(sportId, leagueIds=[], since=None, islive=None, oddsFormat=None, logger=None):
     try:
         headers = {'Authorization': authorization(username, password)}
@@ -270,7 +282,7 @@ def GetOddsParlay(sportId, leagueIds=[], since=None, islive=None, oddsFormat=Non
             params['islive'] = islive
         if oddsFormat:
             params['oddsFormat'] = oddsFormat
-        data = urllib.parse.urlencode(params)        
+        data = urllib.parse.urlencode(params)
         host = APIHOST
         url = '/v1/odds/parlay?'
         conn = http.client.HTTPSConnection(host, timeout=GLB_TIMEOUT)
@@ -285,12 +297,13 @@ def GetOddsParlay(sportId, leagueIds=[], since=None, islive=None, oddsFormat=Non
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
         return None
-        
+
+
 def GetTeaserOdds(teaserId, logger=None):
     try:
         headers = {'Authorization': authorization(username, password)}
         params = {'teaserId': teaserId}
-        data = urllib.parse.urlencode(params)        
+        data = urllib.parse.urlencode(params)
         host = APIHOST
         url = '/v1/odds/teaser?'
         conn = http.client.HTTPSConnection(host, timeout=GLB_TIMEOUT)
@@ -306,6 +319,7 @@ def GetTeaserOdds(teaserId, logger=None):
         SysUtil.exceptionPrint(logger, ex)
         return None
 
+
 def GetSpecialOdds(sportId, leagueIds=[], since=None, specialId=None, oddsFormat=None, logger=None):
     try:
         headers = {'Authorization': authorization(username, password)}
@@ -320,7 +334,7 @@ def GetSpecialOdds(sportId, leagueIds=[], since=None, specialId=None, oddsFormat
             params['specialId'] = specialId
         if oddsFormat:
             params['oddsFormat'] = oddsFormat
-        data = urllib.parse.urlencode(params)        
+        data = urllib.parse.urlencode(params)
         host = APIHOST
         url = '/v1/odds/special?'
         conn = http.client.HTTPSConnection(host, timeout=GLB_TIMEOUT)
@@ -334,11 +348,12 @@ def GetSpecialOdds(sportId, leagueIds=[], since=None, specialId=None, oddsFormat
         return rspjson
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
-        return None   
+        return None
+
 
 def GetCurrencies(logger=None):
     try:
-        headers = {'Authorization': authorization(username, password)}       
+        headers = {'Authorization': authorization(username, password)}
         host = APIHOST
         url = '/v2/currencies'
         conn = http.client.HTTPSConnection(host, timeout=GLB_TIMEOUT)
@@ -352,8 +367,9 @@ def GetCurrencies(logger=None):
         return rspjson
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
-        return None 
-    
+        return None
+
+
 def GetClientBalance(logger=None):
     try:
         headers = {'Authorization': authorization(username, password)}
@@ -370,11 +386,12 @@ def GetClientBalance(logger=None):
         return rspjson
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
-        return None 
-    
-def GetLine(sportId, leagueId, eventId , periodNumber, betType, oddsFormat, team=None, side=None, handicap=None, logger=None):
+        return None
+
+
+def GetLine(sportId, leagueId, eventId, periodNumber, betType, oddsFormat, team=None, side=None, handicap=None, logger=None):
     try:
-        headers = {'Authorization': authorization(username, password)} 
+        headers = {'Authorization': authorization(username, password)}
         params = {}
         if sportId:
             params['sportId'] = sportId
@@ -409,7 +426,8 @@ def GetLine(sportId, leagueId, eventId , periodNumber, betType, oddsFormat, team
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
         return None
-    
+
+
 def GetParlayLine(oddsFormat, legs, logger=None):
     try:
         headers = {'Authorization': authorization(username, password),
@@ -434,7 +452,8 @@ def GetParlayLine(oddsFormat, legs, logger=None):
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
         return None
-    
+
+
 def GetTeaserLines(teaserId, oddsFormat, legs, logger=None):
     try:
         headers = {'Authorization': authorization(username, password),
@@ -462,6 +481,7 @@ def GetTeaserLines(teaserId, oddsFormat, legs, logger=None):
         SysUtil.exceptionPrint(logger, ex)
         return None
 
+
 def GetSpecialLines(specialId, contestantId, oddsFormat, logger=None):
     try:
         headers = {'Authorization': authorization(username, password)}
@@ -486,8 +506,9 @@ def GetSpecialLines(specialId, contestantId, oddsFormat, logger=None):
         return rspjson
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
-        return None  
-    
+        return None
+
+
 def PlaceParlayBet(uniqueRequestId, acceptBetterLine, oddsFormat, riskAmount, roundRobinOptions, legs, logger=None):
     try:
         headers = {'Authorization': authorization(username, password),
@@ -519,8 +540,9 @@ def PlaceParlayBet(uniqueRequestId, acceptBetterLine, oddsFormat, riskAmount, ro
         return rspjson
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
-        return None    
-    
+        return None
+
+
 def PlaceTeaserBet(uniqueRequestId, teaserId, oddsFormat, winRiskStake, stake, legs, logger=None):
     try:
         headers = {'Authorization': authorization(username, password),
@@ -554,6 +576,7 @@ def PlaceTeaserBet(uniqueRequestId, teaserId, oddsFormat, winRiskStake, stake, l
         SysUtil.exceptionPrint(logger, ex)
         return None
 
+
 def PlaceSpecialBet(bets, logger=None):
     try:
         headers = {'Authorization': authorization(username, password),
@@ -576,7 +599,8 @@ def PlaceSpecialBet(bets, logger=None):
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
         return None
-    
+
+
 def GetBets(betlist=None, betids=None, fromDate=None, toDate=None, logger=None):
     try:
         headers = {'Authorization': authorization(username, password)}
@@ -604,10 +628,11 @@ def GetBets(betlist=None, betids=None, fromDate=None, toDate=None, logger=None):
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
         return None
-    
+
+
 def GetInrunning(logger=None):
     try:
-        headers = {'Authorization': authorization(username, password)}       
+        headers = {'Authorization': authorization(username, password)}
         host = APIHOST
         url = '/v1/inrunning'
         conn = http.client.HTTPSConnection(host, timeout=GLB_TIMEOUT)
@@ -621,8 +646,9 @@ def GetInrunning(logger=None):
         return rspjson
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
-        return None 
-    
+        return None
+
+
 def GetTranslations(cultureCodes, baseTexts, logger=None):
     try:
         headers = {'Authorization': authorization(username, password)}
@@ -644,8 +670,9 @@ def GetTranslations(cultureCodes, baseTexts, logger=None):
         conn.close()
         return rspjson
     except Exception as ex:
-#        SysUtil.exceptionPrint(logger, ex)
+        #        SysUtil.exceptionPrint(logger, ex)
         return None
+
 
 def GetPeriods(sportId, logger=None):
     try:
@@ -669,6 +696,7 @@ def GetPeriods(sportId, logger=None):
         SysUtil.exceptionPrint(logger, ex)
         return None
 
+
 def GetCancellationReasons(logger=None):
     try:
         headers = {'Authorization': authorization(username, password)}
@@ -686,7 +714,8 @@ def GetCancellationReasons(logger=None):
     except Exception as ex:
         SysUtil.exceptionPrint(logger, ex)
         return None
-        
+
+
 def GetTransResult(text, code, translations):
     if translations:
         for item in translations['translations']:

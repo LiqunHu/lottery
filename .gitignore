@@ -1,0 +1,7 @@
+log
+*.log
+*.pyc
+mysql
+mongodb
+.DS_Store
+.DS_Store?
