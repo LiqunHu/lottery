@@ -12,7 +12,7 @@ from sqlalchemy.engine import reflection
 from workserver.util import SysUtil
 from workserver.util import GLBConfig
 from workserver.module.models import User, UserData, PayLog, AccountRunning, MatchData, AccountRunningBatch, MatchDataBatch,\
-    Dealer, MatchInfo, MatchInfo500, MatchInfoD, MatchInfo500D, DealerMatch, MatchInfo500Time,\
+    Dealer, MatchInfo, MatchInfo500, MatchInfoD, MatchInfo500D, DealerMatch, MatchInfo500Time, DuotoneBallLottery,\
     PinnacleSports, PinnacleLeagues, PinnacleTimestamp, PinnacleFixtures, PinnacleSettledFixtures, PinnacleSettledSpecialFixtures
 
 # 为了解决mysql gone away尝试使用NullPool和设置POOL_RECYCLE为5s
@@ -81,6 +81,10 @@ def InitTables(engine):
 
     if 'tbl_matchinfo_500time' not in tables:
         MatchInfo500Time.__table__.create(engine)
+        db.commit()
+
+    if 'tbl_duotone_ball_lottery' not in tables:
+        DuotoneBallLottery.__table__.create(engine)
         db.commit()
 
     if 'tbl_pinnacle_sports' not in tables:

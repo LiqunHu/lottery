@@ -25,10 +25,10 @@ class SpiderSportsBatch(BatchBase):
         end = datetime.date.today()
         maxDate = self.session.query(func.max(MatchInfo.date).label('max_date')).first()
         start = maxDate.max_date + datetime.timedelta(days=1)
-        
+
         self.getMatresult(start, end)
         self.release()
-        
+
     def getMinRate(self, my_list):
         minNum = my_list[0]
         if minNum > 40:
@@ -37,9 +37,9 @@ class SpiderSportsBatch(BatchBase):
             if i < minNum:
                 minNum = i
         return minNum
-        
+
     def getWDLRate(self, urlWDL):
-        try:    
+        try:
             contentWDL = urllib.request.urlopen(urlWDL,timeout = 10).read()
             messageWDL = contentWDL.decode('gbk').encode('utf8')
             soupWDL = BeautifulSoup(messageWDL, 'html.parser')
@@ -49,10 +49,10 @@ class SpiderSportsBatch(BatchBase):
             tmpRate = re.search("[\d]+\.[\d]+",repr(tddWDL[1]))
             rateA = (99.99,99.99,99.99)
             if tmpRate is not None:
-                rateA = (float(re.search("[\d]+\.[\d]+",repr(tddWDL[1])).group()), 
+                rateA = (float(re.search("[\d]+\.[\d]+",repr(tddWDL[1])).group()),
                    float(re.search("[\d]+\.[\d]+",repr(tddWDL[2])).group()),
                    float(re.search("[\d]+\.[\d]+",repr(tddWDL[3])).group()))
-            
+
             rateB = ('0',99.99,99.99,99.99)
             trrWDLS = tbWDL[1].findAll('tr')
             tddWDLS = trrWDLS[-1].findAll('td')
@@ -69,7 +69,7 @@ class SpiderSportsBatch(BatchBase):
                                  float(re.search("[\d]+\.[\d]+",repr(tddWDLS[2])).group()),
                                  float(re.search("[\d]+\.[\d]+",repr(tddWDLS[3])).group()),
                                  float(re.search("[\d]+\.[\d]+",repr(tddWDLS[4])).group()))
-            
+
             trrScore = tbWDL[3].findAll('tr')
             tddScore = trrScore[-1].findAll('td')
     #        print tddScore[1].text
@@ -79,7 +79,7 @@ class SpiderSportsBatch(BatchBase):
                 rateC = (float(tddScore[1].text),float(tddScore[2].text),float(tddScore[3].text),
                         float(tddScore[4].text),float(tddScore[5].text),float(tddScore[6].text),
                         float(tddScore[7].text),float(tddScore[8].text))
-            
+
             trrHF = tbWDL[4].findAll('tr')
             tddHF = trrHF[-1].findAll('td')
             rateD = (99.99,99.99,99.99,99.99,99.99,99.99,99.99,99.99,99.99)
@@ -88,12 +88,12 @@ class SpiderSportsBatch(BatchBase):
                 rateD = (float(tddHF[1].text),float(tddHF[2].text),float(tddHF[3].text),
                         float(tddHF[4].text),float(tddHF[5].text),float(tddHF[6].text),
                         float(tddHF[7].text),float(tddHF[8].text),float(tddHF[9].text))
-                
+
             return (rateA,rateB,rateC,rateD)
         except Exception as ex:
             SysUtil.exceptionPrint(self.logger, ex)
-            return None    
-        
+            return None
+
     def getMatch(self, urlM):
         try:
             content = urllib.request.urlopen(urlM,timeout = 10).read()
@@ -135,17 +135,17 @@ class SpiderSportsBatch(BatchBase):
                         fixResult = 'D'
                     else:
                         fixResult = 'L'
-                        
+
                     minrate = self.getMinRate( (rates[0][0],rates[0][1],rates[0][2]) )
-                    minrateS  = self.getMinRate( (rates[1][1],rates[1][2],rates[1][3]) )  
-                    
+                    minrateS  = self.getMinRate( (rates[1][1],rates[1][2],rates[1][3]) )
+
                     totalScore = int(score.groups()[0]) + int(score.groups()[1])
-                    
+
                     mp = self.session.query(MatchInfo).filter(MatchInfo.matchid == matchid).first()
                     if mp:
                         self.session.delete(mp)
                         self.session.flush()
-                    
+
                     m = MatchInfo(matchid = matchid,
                                 match = tds[1].text,
                                 date = datetime.datetime.strptime(tds[0].text, '%Y-%m-%d').date(),
@@ -193,12 +193,12 @@ class SpiderSportsBatch(BatchBase):
                                 infoUrl = rateurl)
                     self.session.add(m)
                     self.session.commit()
-                    
+
             return True
         except Exception as ex:
             SysUtil.exceptionPrint(self.logger, ex)
-            return False    
-        
+            return False
+
     def fetchUrl(self, start, end, start_d, end_d):
         for num in range(start,end+1):
             self.logger.info(num)
@@ -208,20 +208,20 @@ class SpiderSportsBatch(BatchBase):
                 self.logger.info(urlFech)
                 result = self.getMatch(urlFech)
                 time.sleep(random.randint(1,3))
-        
+
     def getMatresult(self, start_d, end_d):
         self.session.query(MatchInfo).\
             filter(MatchInfo.date == end_d).delete()
         self.session.commit()
-        
+
         d = self.session.query(func.max(MatchInfo.date)).scalar()
         if d is not None:
             print(d)
             start_d = d - datetime.timedelta(days=1)
-            
+
         print(start_d)
         print(end_d)
-            
+
         data = {}
         data['start_date'] = start_d.isoformat()
         data['end_date'] = end_d.isoformat()
@@ -240,7 +240,7 @@ class SpiderSportsBatch(BatchBase):
             m = re.search(r'match\_result\.php\?page\=(\d+)(.[\S]*)dan=', alast['href'])
             if m:
                 pageNum = int(m.groups()[0])
-            
+
         if pageNum != 0:
             self.logger.info(pageNum)
             start = 1
@@ -251,10 +251,10 @@ class SpiderSportsBatch(BatchBase):
                 self.fetchUrl(start,end,start_d,end_d)
                 start = end
             self.fetchUrl(start,pageNum,start_d,end_d)
-            
+
         self.logger.info('Finish !!!!!!!!!!')
-        
-    
-if __name__ == '__main__':  
+
+
+if __name__ == '__main__':
     SpiderSportsBatch().run()
 #    SpiderSports500W.SpiderSports500WBatch().run()

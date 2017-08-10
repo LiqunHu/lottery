@@ -1,4 +1,5 @@
 log
+.spyproject
 *.log
 *.pyc
 mysql

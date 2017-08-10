@@ -324,6 +324,26 @@ class MatchInfo500Time(Base):
     keHScore = Column(Integer)
     mststus = Column(String(50))
 
+class DuotoneBallLottery(Base):
+    __tablename__ = 'tbl_duotone_ball_lottery'
+    nper = Column(String(10), primary_key=True)
+    r1 = Column(SmallInteger)
+    r2 = Column(SmallInteger)
+    r3 = Column(SmallInteger)
+    r4 = Column(SmallInteger)
+    r5 = Column(SmallInteger)
+    r6 = Column(SmallInteger)
+    rArray = Column(String(50))
+    b = Column(SmallInteger)
+    hSun = Column(Integer) #快乐星期天
+    jackpotBonuses = Column(BigInteger)
+    firstPrizeNum = Column(Integer) #一等奖注数
+    firstPrizeMoney = Column(BigInteger) #一等奖奖金
+    secondPrizeNum = Column(Integer) #二等奖注数
+    secondPrizeMoney = Column(BigInteger) #二等奖奖金
+    totalBet = Column(BigInteger)
+    lotteryDate = Column(Date())
+
 
 class PinnaclePara(Base):
     __tablename__ = 'tbl_pinnacle_para'
