@@ -55,7 +55,7 @@ class SpiderDuotoneBallLotteryBatch(BatchBase):
             end_str = "%05d" % endNum
             url = 'http://datachart.500.com/ssq/history/newinc/history.php?start=' + \
                 start_str + '&end=' + end_str
-            content = urllib.request.urlopen(url).read()
+            content = urllib.request.urlopen(url, timeout=10).read()
 #            message = content.decode('gbk').encode('utf8')
             soup = BeautifulSoup(content, 'html.parser')
             table = soup.find_all(id="tdata")
