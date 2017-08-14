@@ -42,6 +42,14 @@ class SpiderDuotoneBallLotteryBatch(BatchBase):
             return end[0]['value']
         else:
             return None
+        
+    def getContent(self, url):
+        try:
+            content = urllib.request.urlopen(url, timeout=10).read()
+            return content
+        except Exception as ex:
+            SysUtil.exceptionPrint(self.logger, ex)
+            return None
 
     def getPage(self, start, end):
         pageSize = 200
@@ -55,8 +63,19 @@ class SpiderDuotoneBallLotteryBatch(BatchBase):
             end_str = "%05d" % endNum
             url = 'http://datachart.500.com/ssq/history/newinc/history.php?start=' + \
                 start_str + '&end=' + end_str
-            content = urllib.request.urlopen(url, timeout=10).read()
-#            message = content.decode('gbk').encode('utf8')
+            
+            content = self.getContent(url)
+            i = 0
+            while not content:
+                time.sleep(10)
+                content = self.getContent(url)
+                i = i+1
+                if i>10:
+                    break
+            
+            if not content:
+                return
+            
             soup = BeautifulSoup(content, 'html.parser')
             table = soup.find_all(id="tdata")
             if len(table) > 0:
